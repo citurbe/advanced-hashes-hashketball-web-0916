@@ -118,27 +118,17 @@ def game_hash
 end
 
 def num_points_scored(player_name)
-  points = 0
-  stats = game_hash
-  stats.each do |status, team_hash|
-    team_hash[:players].each do |name, stats|
-      points = stats[:points] if name == player_name
-    end
-  end
-  points
 
+  game_hash.each do |location, team_hash|
+    return team_hash[:players][player_name][:points] if team_hash[:players].include?(player_name)
+    end
 end
 
-def shoe_size(player_name)
-  size = 0
-  stats = game_hash
-  stats.each do |status, team_hash|
-    team_hash[:players].each do |name, stats|
-      size = stats[:shoe] if name == player_name
-    end
-  end
-  size
 
+def shoe_size(player_name)
+  game_hash.each do |location, team_data|
+    return team_data[:players][player_name][:shoe] if team_data[:players].include?(player_name)
+  end
 end
 
 def team_colors (team_name)
@@ -147,24 +137,39 @@ def team_colors (team_name)
   end
 end
 
+# def team_colors(team_name)
+#   game_hash.each_with_object([]) do |(location, team_data), colors|
+#     colors = team_data[:colors] if team_data[:team_name].downcase == team_name.downcase 
+#   end
+# end 
+
+
+
+# def team_names
+#   output = []
+#   game_hash.each do |status, team|
+#     output << team[:team_name]
+#   end
+#   output
+# end
+
 def team_names
-  output = []
-  game_hash. each do |status, team|
-    output << team[:team_name]
+  game_hash.each_with_object([]) do |(location, team_data), names|
+    
+    names << team_data[:team_name]
   end
-  output
 end
 
 def player_numbers (team_name)
   output = []
-  game_hash.each do |status, team|
+  game_hash.each_with_object([] )do |(status, team), numbers_array|
     if team[:team_name] == team_name
       team[:players].each do |name, stats|
-        output << stats[:number]
+        numbers_array << stats[:number]
       end
     end
   end
-  output
+
 end
 
 def player_stats (player)
